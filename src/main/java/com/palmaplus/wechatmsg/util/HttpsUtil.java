@@ -16,7 +16,7 @@ import java.net.URL;
  * 发送Https请求
  * @Param reqURL: 请求地址
  * @Param reqMethod：请求方式
- * @Param outputStr：返回的数据
+ * @Param outputStr：需要上传的数据
  * @Return jsonObject
  */
 
@@ -42,7 +42,9 @@ public class HttpsUtil {
                 outputStream.write(outputStr.getBytes("UTF-8"));//编码格式UTF-8
                 outputStream.close();
             }
-            //从输入流获取数据并返回
+            /**
+             * 获取输入流，获取
+             */
             InputStream inputStream = conn.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream,"utf-8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);

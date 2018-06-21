@@ -12,5 +12,5 @@ import lombok.Data;
 @Data
 public class AccessToken {
     private String accessToken;    //取到的令牌
-    private static int expression = 3600; //令牌有效时间，单位:s
+    private static Long expression = 3600L; //令牌有效时间，单位:s
 }

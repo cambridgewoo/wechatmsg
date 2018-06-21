@@ -24,6 +24,26 @@ public class TemplateMsg {
     private JSONObject data; // 模板详细信息[value+data]
     private String color;   //模板字体颜色，默认为黑色
 
+/*    private String bdId;    //Building ID
+    private String bdName;  //Building Name
+    private String messageName; //Message的类型（例如挂号类型）
+    private String patientName; //病人姓名
+    private String doctorName;  //医生姓名
+    private String departmentName;  //科室名称
+    private String time;    //时间戳
+    private String openId;  //openID
+    private String templateId;  //模板ID*/
+
+    public TemplateMsg(String touser,TemplateData templateData){
+        this.touser = touser;
+        this.data = TemplateJsonPackageUtil.pacJSONmsg(templateData.getFirst(),
+                templateData.getKeyword1(), //患者姓名
+                templateData.getKeyword2(), //患者性别
+                templateData.getKeyword3(), //科室
+                templateData.getKeyword4(), //医生姓名
+                templateData.getKeyword5(), //挂号时间
+                templateData.getRemark());
+    }
     public TemplateMsg(String touser, String template_id, String url, String miniprogram, String appid, String pagePath, TemplateData templateData, String color) {
         this.touser = touser;
         this.template_id = template_id;
@@ -31,11 +51,23 @@ public class TemplateMsg {
         this.miniprogram = miniprogram==null?null:miniprogram;
         this.appid = appid;
         this.pagePath = pagePath==null?null:pagePath;
-        this.data = TemplateJsonPackageUtil.pacJSONmsg(templateData.getFirst(),templateData.getPatientName(),templateData.getDepartment(),templateData.getDate(),templateData.getRemark());
+        this.data = TemplateJsonPackageUtil.pacJSONmsg(templateData.getFirst(),
+                templateData.getKeyword1(),
+                templateData.getKeyword2(),
+                templateData.getKeyword3(),
+                templateData.getKeyword4(),
+                templateData.getKeyword5(),
+                templateData.getRemark());
         this.color = color==null?null:color;
     }
 
     public void setTemplateData(TemplateData templateData) {
-        this.data = TemplateJsonPackageUtil.pacJSONmsg(templateData.getFirst(),templateData.getPatientName(),templateData.getDepartment(),templateData.getDate(),templateData.getRemark());
+        this.data = TemplateJsonPackageUtil.pacJSONmsg(templateData.getFirst(),
+                templateData.getKeyword1(),
+                templateData.getKeyword2(),
+                templateData.getKeyword3(),
+                templateData.getKeyword4(),
+                templateData.getKeyword5(),
+                templateData.getRemark());
     }
 }

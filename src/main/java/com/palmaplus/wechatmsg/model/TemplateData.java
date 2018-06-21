@@ -16,19 +16,24 @@ import java.util.Date;
 @Data
 public class TemplateData {
     private String first;
-    private String patientName;
-    private String department;
-    private String date;
+    private String keyword1;    //患者姓名
+    private String keyword2;    //性别
+    private String keyword3;    //科室
+    private String keyword4;    //挂号医生
+    private String keyword5;    //挂号时间
     private String remark;
 
-    public TemplateData(String first, String patientName, String department, String remark) {
-        Date d = new Date();
+    public TemplateData(String first, String keyword1, String keyword2, String keyword3, String keyword4, String keyword5, String remark) {
+       /* Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateNowStr = sdf.format(d);
+        String dateNowStr = sdf.format(d);*/
         this.first = first;
-        this.patientName = patientName;
-        this.department = department;
-        this.date = dateNowStr;
+        this.keyword1 = keyword1;
+        this.keyword2 = keyword2;
+      //this.date = dateNowStr;
+        this.keyword3 = keyword3;
+        this.keyword4 = keyword4;
+        this.keyword5 = keyword5;
         this.remark = remark;
     }
 }
