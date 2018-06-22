@@ -6,9 +6,6 @@ package com.palmaplus.wechatmsg.model;
 
 import lombok.Data;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 /**
  * 模板详细信息
@@ -23,6 +20,9 @@ public class TemplateData {
     private String keyword5;    //挂号时间
     private String remark;
 
+    public TemplateData(){
+
+    }
     public TemplateData(String first, String keyword1, String keyword2, String keyword3, String keyword4, String keyword5, String remark) {
        /* Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

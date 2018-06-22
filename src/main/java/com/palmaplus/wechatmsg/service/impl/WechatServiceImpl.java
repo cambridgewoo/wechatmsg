@@ -75,7 +75,7 @@ public class WechatServiceImpl implements WechatService {
         //http请求，方式GET
         String tempurl = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=ACCESS_TOKEN";
         //获取API凭证
-        String accessToken = WechatTokenUtil.getAccessTokenHttp().get("access_token").toString();
+        String accessToken = WechatTokenUtil.getAccessToken().getAccessToken();
         String url = tempurl.replace("ACCESS_TOKEN",accessToken);
 
         String res = HttpsUtil.httpsRequest(url,"GET","");

@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 
@@ -23,6 +24,39 @@ import java.net.URL;
 @Log4j2
 public class HttpsUtil {
 
+    public static String httpRequest(String reqURL,String reqMethod){
+        try{
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            //设置请求方式
+            conn.setRequestMethod(reqMethod);
+            /**
+             * 获取输入流，获取
+             */
+            InputStream inputStream = conn.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream,"utf-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String str;
+            StringBuffer stringBuffer = new StringBuffer();
+            while((str = bufferedReader.readLine())!=null){
+                stringBuffer.append(str);
+            }
+            //释放
+            bufferedReader.close();
+            inputStreamReader.close();
+            inputStream.close();
+
+            conn.disconnect();
+            return stringBuffer.toString();
+        }catch (ConnectException ce){
+            log.info("连接超时");
+        }catch (Exception e){
+            log.info("https请求异常");
+        }
+        return null;
+    }
     public static String httpsRequest(String reqURL,String reqMethod,String outputStr){
         try{
             URL url = new URL(reqURL);
@@ -48,7 +82,7 @@ public class HttpsUtil {
             InputStream inputStream = conn.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream,"utf-8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String str = null;
+            String str;
             StringBuffer stringBuffer = new StringBuffer();
             while((str = bufferedReader.readLine())!=null){
                 stringBuffer.append(str);

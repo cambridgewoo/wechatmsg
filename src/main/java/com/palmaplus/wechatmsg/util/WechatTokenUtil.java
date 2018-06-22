@@ -37,29 +37,27 @@ public class WechatTokenUtil {
     private static final long ACCESS_TOKEN_SCHEDULE = 3600L;
 
     //获取Access_Token,synchronized关键字防止同时被多实例化（从Redis获取常驻的AccessToken）
-    public synchronized  AccessToken getAccessToken(){
+    public synchronized AccessToken getAccessTokenFromRedis() {
         AccessToken resToken = new AccessToken();
 
-        if(!redisService.exists("accessToken")){    // redis中不存在accessToken
+        if (!redisService.exists("accessToken")) {    // redis中不存在accessToken
             //发送http请求得到json流
             JSONObject jobject = getAccessTokenHttp();
             //从json流中获取access_token
-            String  j_access_token = (String) jobject.get("access_token");
-            redisService.setValue("accessToken",j_access_token,ACCESS_TOKEN_SCHEDULE);
-     //       redisService.setValue("accessToken",j_access_token);
-            boolean flag = redisService.exists("accessToken");
+            String j_access_token = (String) jobject.get("access_token");
+            redisService.setValue("accessToken", j_access_token, ACCESS_TOKEN_SCHEDULE);
+            //       redisService.setValue("accessToken",j_access_token);
             resToken.setAccessToken(j_access_token);
-        }else{
+        } else {
             resToken.setAccessToken(redisService.getValue("accessToken").toString());
         }
         return resToken;
+    }
 
-
-        /**
-         * 将accessToken存在文件中
-         */
-
-        /*//保存access_token文件名字
+    // 将accessToken存在文件中
+    public synchronized AccessToken getAccessTokenFromFile() {
+        AccessToken resToken = new AccessToken();
+        //保存access_token文件名字
         String fileName = "wechatTokenUtil.properties";
         try {
             // 从文件中获取token值及时间
@@ -76,11 +74,11 @@ public class WechatTokenUtil {
             String expires_in = prop.getProperty("ACCESS_TOKEN_SCHEDULE");
             String last_time = prop.getProperty("last_time");
 
-        //    int int_expires_in = 0;     //失效时间
+            //    int int_expires_in = 0;     //失效时间
             long long_last_time = 0;    //上一次获取accesstoken的时间
 
             try {
-     //           int_expires_in = Integer.parseInt(expires_in);
+                //           int_expires_in = Integer.parseInt(expires_in);
                 long_last_time = Long.parseLong(last_time);
 
             } catch (Exception e) {
@@ -94,8 +92,8 @@ public class WechatTokenUtil {
                 //发送http请求得到json流
                 JSONObject jobject = getAccessTokenHttp();
                 //从json流中获取access_token
-                String  j_access_token = (String) jobject.get("access_token");
-                String  j_expires_in = jobject.get("expires_in").toString();
+                String j_access_token = (String) jobject.get("access_token");
+                String j_expires_in = jobject.get("expires_in").toString();
 
                 //保存access_token
                 if (j_access_token != null && j_expires_in != null) {
@@ -118,20 +116,30 @@ public class WechatTokenUtil {
             }
         } catch (Exception e) {
             return null;
-        }*/
+        }
     }
 
+    //从第三方直接获取access_token
+    public static synchronized AccessToken getAccessToken(){
+        AccessToken resToken = new AccessToken();
+        //http请求
+        String url = "http://qhd.great-net.cn/paycenter/api/Accesstokenapi/getWechatToken";
+        //调用HttpsUtil接口
+        String accessToken = HttpsUtil.httpRequest(url, "GET").replace("\"","");
+        resToken.setAccessToken(accessToken);
+        return resToken;
+    }
     //https请求获取AccessToken（定时获取AccessToken）
-    public synchronized static JSONObject getAccessTokenHttp(){
+    public synchronized static JSONObject getAccessTokenHttp() {
         //https请求，方式为GET
         String tempURL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
-        String url = tempURL.replace("APPID",appID);
-        url = url.replace("APPSECRET",appSecret);
+        String url = tempURL.replace("APPID", appID);
+        url = url.replace("APPSECRET", appSecret);
 
         JSONObject jsonObject = null;
         //调用HttpsUtil接口
-        jsonObject = JSONObject.parseObject(HttpsUtil.httpsRequest(url,"GET",null));
+        jsonObject = JSONObject.parseObject(HttpsUtil.httpsRequest(url, "GET", null));
         return jsonObject;
     }
 }
